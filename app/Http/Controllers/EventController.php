@@ -10,11 +10,28 @@ class EventController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param  Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function eventGet(Request $request)
     {
-        //
+        $start_date = $request->input('start_date');
+        $end_date = $request->input('end_date');
+
+        // 登録処理
+        $event =  Event::query()
+            ->select(
+                // FullCalendarの形式に合わせる
+                'start_date as start',
+                'end_date as end',
+                'event_name as title',
+            )
+            // FullCalendarの表示範囲のみ表示
+            ->where('end_date', '>', $start_date)
+            ->where('start_date', '<', $end_date)
+            ->get();
+            // dd($event);
+            return response()->json($event);
     }
 
     /**
@@ -25,10 +42,7 @@ class EventController extends Controller
      */
     public function store(Request $request)
     {
-        $event = Event::create([
-            'event_name' => $request->event_name,
-        ]);
-
+        $event = Event::create($request->post());
         return response()->json($event);
     }
 
