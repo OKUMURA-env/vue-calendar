@@ -18,6 +18,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/calendar', function () {
-    return view('calendar');
-});
+Route::post('event/event-get',[App\Http\Controllers\EventController::class,'eventGet']);
+Route::resource('event',App\Http\Controllers\EventController::class)->only(['store','show','update','destroy']);
