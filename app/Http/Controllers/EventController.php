@@ -22,6 +22,7 @@ class EventController extends Controller
         $event =  Event::query()
             ->select(
                 // FullCalendarの形式に合わせる
+                'id',
                 'start_date as start',
                 'end_date as end',
                 'event_name as title',
@@ -64,9 +65,14 @@ class EventController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        $event = Event::where("id",$request->id)->update([
+            'event_name' => $request->event_name,
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date,
+        ]);
+        return response()->json($event);
     }
 
     /**
@@ -77,6 +83,6 @@ class EventController extends Controller
      */
     public function destroy($id)
     {
-        //
+        // 
     }
 }
